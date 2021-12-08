@@ -31,7 +31,8 @@ func TestValidMove(t *testing.T) {
 	emptySquare := 15 //*
 	moveRequested := "6"
 	gameBoard := genGameBoard()
-	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameBoard)
+	gameSquares = sortBoardByValue(gameBoard)
+	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameSquares)
 	assert.True(t, valid)
 	assert.Equal(t, 16, moveRequestedLocation)
 }
@@ -40,7 +41,18 @@ func TestNotValidMove(t *testing.T) {
 	emptySquare := 15 //*
 	moveRequested := "1"
 	gameBoard := genGameBoard()
-	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameBoard)
+	gameSquares = sortBoardByValue(gameBoard)
+	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameSquares)
 	assert.False(t, valid)
 	assert.Equal(t, -1, moveRequestedLocation)
+}
+
+func TestValidMove1(t *testing.T) {
+	emptySquare := 15 //*
+	moveRequested := "14"
+	gameBoard := genGameBoard()
+	gameSquares = sortBoardByValue(gameBoard)
+	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameSquares)
+	assert.True(t, valid)
+	assert.Equal(t, 11, moveRequestedLocation)
 }
