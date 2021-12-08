@@ -87,10 +87,6 @@ func shiftBoard(gameBoard map[int]string, startShiftSpace int, shiftChar string)
 }
 
 func flipSpaces(gameBoard map[int]string, startShiftSpace int, shiftChar string, moveRequestedLocation int) {
-	gameBoardCP := make(map[int]string)
-	for k, v := range gameBoard {
-		gameBoardCP[k] = v
-	}
 	gameBoard[startShiftSpace] = shiftChar
 	gameBoard[moveRequestedLocation] = "*"
 	emptySquare = moveRequestedLocation
