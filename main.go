@@ -1,9 +1,21 @@
 package main
 
 import (
-	"puzzle/game"
+	"fmt"
+	"net/http"
 )
 
 func main() {
-	game.CreateBoard()
+	http.HandleFunc("/puzzle", puzzle)
+	http.HandleFunc("/", hello)
+	http.ListenAndServe(":8080", nil)
+}
+
+func puzzle(w http.ResponseWriter, req *http.Request) {
+	// game.CreateBoard()
+	fmt.Fprintf(w, "puzzle\n")
+}
+
+func hello(w http.ResponseWriter, req *http.Request) {
+	fmt.Fprintf(w, "hello\n")
 }
