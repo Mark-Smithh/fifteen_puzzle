@@ -5,12 +5,19 @@ import (
 	"fmt"
 	"math/rand"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
 )
 
 var emptySquare int
+var gameSquares []gameSquare
+
+type gameSquare struct {
+	square int
+	value  int
+}
 
 func CreateBoard() {
 	numTracker := make(map[int]int)
@@ -19,12 +26,17 @@ func CreateBoard() {
 		num := uniqueNum(numTracker, gameBoard)
 		gameBoard[x] = strconv.Itoa(num)
 	}
+
 	emptySquare = randomNumber()
 	shiftBoard(gameBoard, emptySquare, "*")
+
 	fmt.Printf("%s\n\n", "Welcome! Here is your board:")
 	printBoard(gameBoard)
+
+	gameSquares = sortBoardByValue(gameBoard)
+
 	for {
-		playGame(emptySquare, gameBoard)
+		playGame(gameBoard)
 	}
 }
 
@@ -82,6 +94,8 @@ func flipSpaces(gameBoard map[int]string, startShiftSpace int, shiftChar string,
 	gameBoard[startShiftSpace] = shiftChar
 	gameBoard[moveRequestedLocation] = "*"
 	emptySquare = moveRequestedLocation
+
+	gameSquares = sortBoardByValue(gameBoard)
 }
 
 func makeMove(emptySquare int) string {
@@ -94,9 +108,9 @@ func makeMove(emptySquare int) string {
 	return strings.TrimSuffix(moveRequested, "\n") //ReadString returns value plus the delimiter.  So need to trim the delimiter off
 }
 
-func playGame(emptySquare int, gameBoard map[int]string) {
+func playGame(gameBoard map[int]string) {
 	moveRequested := makeMove(emptySquare)
-	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameBoard)
+	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameSquares)
 	if !valid {
 		fmt.Printf("\n%s\n\n", "Invalid move! Here is your board:")
 		printBoard(gameBoard)
@@ -107,16 +121,65 @@ func playGame(emptySquare int, gameBoard map[int]string) {
 	}
 }
 
-func validMove(emptySquare int, moveRequested string, gameBoard map[int]string) (bool, int) {
+func validMove(emptySquare int, moveRequested string, gameSquares []gameSquare) (bool, int) {
 	var moveRequestedLocation int
-	for x, val := range gameBoard {
-		if val == moveRequested {
-			moveRequestedLocation = x
-			break
-		}
+
+	moveRequestedInt, _ := strconv.Atoi(moveRequested)
+	moveRequestedLocation = findSquare(gameSquares, moveRequestedInt)
+
+	if emptySquare == gameSquares[moveRequestedLocation].square-4 || emptySquare == gameSquares[moveRequestedLocation].square+4 {
+		return true, gameSquares[moveRequestedLocation].square
 	}
-	if emptySquare == moveRequestedLocation-1 || emptySquare == moveRequestedLocation+1 {
-		return true, moveRequestedLocation
+
+	if emptySquare == gameSquares[moveRequestedLocation].square-1 || emptySquare == gameSquares[moveRequestedLocation].square+1 {
+		return true, gameSquares[moveRequestedLocation].square
 	}
+
 	return false, -1
 }
+
+func sortBoardByValue(gameBoard map[int]string) []gameSquare {
+	keys := make([]int, 0, len(gameBoard))
+	for k := range gameBoard {
+		keys = append(keys, k)
+	}
+	sort.Ints(keys)
+
+	sortedBoard := []gameSquare{}
+	for _, v := range keys {
+		valI, _ := strconv.Atoi(gameBoard[v])
+		sortedBoard = append(sortedBoard, gameSquare{square: v, value: valI})
+	}
+
+	sort.SliceStable(sortedBoard, func(i, j int) bool { return sortedBoard[i].value < sortedBoard[j].value })
+	return sortedBoard
+}
+
+func findSquare(sortedBoard []gameSquare, moveRequestedLocation int) int {
+	//use binay search to find the square
+	i := sort.Search(len(sortedBoard), func(i int) bool {
+		return moveRequestedLocation <= sortedBoard[i].value
+	})
+	return i
+}
+
+// func genTestBoard() map[int]string {
+// 	gameBoard := make(map[int]string)
+// 	gameBoard[1] = "3"
+// 	gameBoard[2] = "7"
+// 	gameBoard[3] = "4"
+// 	gameBoard[4] = "12"
+// 	gameBoard[5] = "8"
+// 	gameBoard[6] = "1"
+// 	gameBoard[7] = "9"
+// 	gameBoard[8] = "11"
+// 	gameBoard[9] = "14"
+// 	gameBoard[10] = "*"
+// 	gameBoard[11] = "10"
+// 	gameBoard[12] = "15"
+// 	gameBoard[13] = "13"
+// 	gameBoard[14] = "6"
+// 	gameBoard[15] = "5"
+// 	gameBoard[16] = "2"
+// 	return gameBoard
+// }
