@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"puzzle/game"
 )
 
 func main() {
-	http.HandleFunc("/puzzle", puzzle)
-	http.HandleFunc("/", hello)
-	http.ListenAndServe(":8080", nil)
+	// http.HandleFunc("/puzzle", puzzle)
+	// http.HandleFunc("/", hello)
+	// http.ListenAndServe(":8080", nil)
+	game.CreateBoard()
 }
 
 func puzzle(w http.ResponseWriter, req *http.Request) {
