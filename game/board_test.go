@@ -6,6 +6,13 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+/*
+generated gameboard looks like below
+5 3 7 4
+12 8 1 9
+13 11 14 2
+10 15 * 6
+*/
 func genGameBoard() map[int]string {
 	gameBoard := make(map[int]string)
 	gameBoard[1] = "5"
@@ -31,7 +38,7 @@ func TestValidMove(t *testing.T) {
 	emptySquare := 15 //*
 	moveRequested := "6"
 	gameBoard := genGameBoard()
-	gameSquares = sortBoardByValue(gameBoard)
+	gameSquares := sortBoardByValue(gameBoard)
 	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameSquares)
 	assert.True(t, valid)
 	assert.Equal(t, 16, moveRequestedLocation)
@@ -41,7 +48,7 @@ func TestNotValidMove(t *testing.T) {
 	emptySquare := 15 //*
 	moveRequested := "1"
 	gameBoard := genGameBoard()
-	gameSquares = sortBoardByValue(gameBoard)
+	gameSquares := sortBoardByValue(gameBoard)
 	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameSquares)
 	assert.False(t, valid)
 	assert.Equal(t, -1, moveRequestedLocation)
@@ -51,8 +58,18 @@ func TestValidMove1(t *testing.T) {
 	emptySquare := 15 //*
 	moveRequested := "14"
 	gameBoard := genGameBoard()
-	gameSquares = sortBoardByValue(gameBoard)
+	gameSquares := sortBoardByValue(gameBoard)
 	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameSquares)
 	assert.True(t, valid)
 	assert.Equal(t, 11, moveRequestedLocation)
+}
+
+func TestValidMove2(t *testing.T) {
+	emptySquare := 15 //*
+	moveRequested := "15"
+	gameBoard := genGameBoard()
+	gameSquares := sortBoardByValue(gameBoard)
+	valid, moveRequestedLocation := validMove(emptySquare, moveRequested, gameSquares)
+	assert.True(t, valid)
+	assert.Equal(t, 14, moveRequestedLocation)
 }
