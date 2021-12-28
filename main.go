@@ -7,16 +7,16 @@ import (
 )
 
 func main() {
-	// http.HandleFunc("/puzzle", puzzle)
-	// http.HandleFunc("/", hello)
-	// http.ListenAndServe(":8080", nil)
-	game.CreateBoard()
+	http.HandleFunc("/puzzle", game.PuzzleHttp) //localhost:8080/puzzle
+	http.HandleFunc("/move", game.MakeMoveHttp) //localhost:8080/move?square=1
+	http.HandleFunc("/", hello)
+	http.ListenAndServe(":8080", nil)
 }
 
-func puzzle(w http.ResponseWriter, req *http.Request) {
-	// game.CreateBoard()
-	fmt.Fprintf(w, "puzzle\n")
-}
+// func main() {
+// 	gameBoard, _, _ := game.CreateBoard()
+// 	game.StartGame(os.Stdout, gameBoard)
+// }
 
 func hello(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprintf(w, "hello\n")
