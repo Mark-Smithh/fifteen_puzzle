@@ -9,10 +9,10 @@ import (
 
 // CreateBoard creates the gameboard
 func CreateBoard() (map[int]string, int, []Square) {
-	numTracker := make(map[int]int)
 	gameBoard := make(map[int]string)
+	shuffled := shufNums([]int{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15})
 	for x := 1; x <= 15; x++ {
-		num := uniqueNum(numTracker, gameBoard)
+		num := shuffled[x-1]
 		gameBoard[x] = strconv.Itoa(num)
 	}
 	emptySquare = randomNumber()
@@ -21,25 +21,17 @@ func CreateBoard() (map[int]string, int, []Square) {
 	return gameBoard, emptySquare, sortedGameSquares
 }
 
+func shufNums(nums []int) []int {
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(nums), func(i, j int) { nums[i], nums[j] = nums[j], nums[i] })
+	return nums
+}
+
 func randomNumber() int {
 	rand.Seed(time.Now().UnixNano())
 	min := 1
 	max := 15
 	return rand.Intn(max-min+1) + min
-}
-
-func duplicateNum(numTracker map[int]int, num int) bool {
-	return numTracker[num] > 1
-}
-
-func uniqueNum(numTracker map[int]int, gameBoard map[int]string) int {
-	for {
-		num := randomNumber()
-		numTracker[num]++
-		if !duplicateNum(numTracker, num) {
-			return num
-		}
-	}
 }
 
 func sortBoardByValue(gameBoard map[int]string) []Square {
