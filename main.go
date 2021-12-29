@@ -9,7 +9,7 @@ import (
 )
 
 func main() {
-	if len(os.Args) >= 2 && os.Args[1] == "local" {
+	if len(os.Args) >= 2 && strings.ToLower(os.Args[1]) == "local" {
 		localGame()
 		return
 	} else if len(os.Args) >= 2 && strings.ToLower(os.Args[1]) == "help" {
