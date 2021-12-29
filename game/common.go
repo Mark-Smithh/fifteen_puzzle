@@ -7,7 +7,8 @@ import (
 	"time"
 )
 
-func CreateBoard() (map[int]string, int, []gameSquare) {
+// CreateBoard creates the gameboard
+func CreateBoard() (map[int]string, int, []Square) {
 	numTracker := make(map[int]int)
 	gameBoard := make(map[int]string)
 	for x := 1; x <= 15; x++ {
@@ -41,19 +42,24 @@ func uniqueNum(numTracker map[int]int, gameBoard map[int]string) int {
 	}
 }
 
-func sortBoardByValue(gameBoard map[int]string) []gameSquare {
+func sortBoardByValue(gameBoard map[int]string) []Square {
 	keys := make([]int, 0, len(gameBoard))
 	for k := range gameBoard {
 		keys = append(keys, k)
 	}
 	sort.Ints(keys)
 
-	sortedBoard := []gameSquare{}
+	sortedBoard := []Square{}
 	for _, v := range keys {
 		valI, _ := strconv.Atoi(gameBoard[v])
-		sortedBoard = append(sortedBoard, gameSquare{square: v, value: valI})
+		sortedBoard = append(sortedBoard, Square{square: v, value: valI})
 	}
 
 	sort.SliceStable(sortedBoard, func(i, j int) bool { return sortedBoard[i].value < sortedBoard[j].value })
 	return sortedBoard
+}
+
+//Help return help text
+func Help() string {
+	return "Move the * around the gameboard.  It can only be moved to an adjacent square.  Use /puzzle endpoint to start a new game.  Use /move endpoint to make a move."
 }

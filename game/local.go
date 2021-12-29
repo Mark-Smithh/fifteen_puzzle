@@ -11,8 +11,9 @@ import (
 )
 
 var emptySquare int
-var sortedGameSquares []gameSquare
+var sortedGameSquares []Square
 
+//StartGame start a local game
 func StartGame(w io.Writer, gameBoard map[int]string) {
 	fmt.Fprintf(w, "%s\n\n", "Welcome! Here is your board:")
 	PrintBoard(w, gameBoard)
@@ -21,6 +22,7 @@ func StartGame(w io.Writer, gameBoard map[int]string) {
 	}
 }
 
+//PrintBoard print the board
 func PrintBoard(w io.Writer, gameBoard map[int]string) {
 	for x := 1; x <= 16; x++ {
 		if x != 0 && x%4 == 0 {
@@ -77,7 +79,7 @@ func playGame(w io.Writer, gameBoard map[int]string) {
 	}
 }
 
-func validMove(emptySquare int, moveRequested string, sortedGameSquares []gameSquare) (bool, int) {
+func validMove(emptySquare int, moveRequested string, sortedGameSquares []Square) (bool, int) {
 	var moveRequestedLocation int
 
 	moveRequestedInt, _ := strconv.Atoi(moveRequested)
@@ -94,7 +96,7 @@ func validMove(emptySquare int, moveRequested string, sortedGameSquares []gameSq
 	return false, -1
 }
 
-func findSquare(sortedBoard []gameSquare, moveRequestedLocation int) int {
+func findSquare(sortedBoard []Square, moveRequestedLocation int) int {
 	//use binay search to find the square
 	i := sort.Search(len(sortedBoard), func(i int) bool {
 		return moveRequestedLocation <= sortedBoard[i].value
